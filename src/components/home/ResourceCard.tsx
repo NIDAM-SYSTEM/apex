@@ -6,7 +6,7 @@ type ResourceMeta = { label: string; color: string; icon: React.ReactNode };
 function getMeta(type: ResourceType): ResourceMeta {
   switch (type) {
     case 'past-exam':    return { label: 'Examen', color: 'text-red-600 bg-red-50',     icon: <FileText      className="w-3 h-3" strokeWidth={2} /> };
-    case 'td':           return { label: 'TD',      color: 'text-blue-700 bg-blue-50',   icon: <ClipboardList className="w-3 h-3" strokeWidth={2} /> };
+    case 'td':           return { label: 'TD',      color: 'text-apex-blue bg-apex-cream',   icon: <ClipboardList className="w-3 h-3" strokeWidth={2} /> };
     case 'tp':           return { label: 'TP',      color: 'text-purple-700 bg-purple-50', icon: <Package     className="w-3 h-3" strokeWidth={2} /> };
     case 'course-notes': return { label: 'Cours',   color: 'text-green-700 bg-green-50', icon: <BookOpen      className="w-3 h-3" strokeWidth={2} /> };
     default:             return { label: 'PDF',     color: 'text-slate-600 bg-slate-100', icon: <FileText     className="w-3 h-3" strokeWidth={2} /> };
@@ -52,7 +52,7 @@ export default function ResourceCard({ resource }: { resource: Resource }) {
         <button
           type="button"
           onClick={() => console.log('download', resource.id)}
-          className="inline-flex items-center gap-1.5 bg-apex-blue text-white font-body font-medium text-[12px] px-3 py-1.5 rounded-[6px] hover:bg-[#1d4ed8] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-apex-blue focus:ring-offset-1"
+          className="inline-flex items-center gap-1.5 bg-apex-blue text-white font-body font-medium text-[12px] px-3 py-1.5 rounded-[6px] hover:bg-[#6D1239] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-apex-blue focus:ring-offset-1"
           aria-label={`Télécharger ${resource.title}`}
         >
           <Download className="w-3 h-3" strokeWidth={2.5} />
@@ -62,3 +62,5 @@ export default function ResourceCard({ resource }: { resource: Resource }) {
     </article>
   );
 }
+
+

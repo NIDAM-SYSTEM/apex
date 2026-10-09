@@ -1,350 +1,697 @@
-import { useState } from 'react';
-import { ArrowRight, Clock, User, BookOpen, ExternalLink, Sparkles, TrendingUp } from 'lucide-react';
+import { useEffect, useMemo, useState, type Dispatch, type FormEvent, type SetStateAction } from 'react';
+import {
+  ArrowRight,
+  BookMarked,
+  BookOpen,
+  Check,
+  CheckCircle2,
+  Circle,
+  Clock3,
+  Coffee,
+  ListTodo,
+  Pause,
+  Play,
+  Plus,
+  RotateCcw,
+  Settings2,
+  Target,
+  Trash2,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { useStudyTimer, type StudyDurations, type TimerMode } from '../contexts/StudyTimerContext';
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-// (Data remains the same as provided)
-type Category = 'Tous' | 'Méthodologie' | 'Vie Campus' | 'Tech & Code' | 'Événements';
-
-const CATEGORIES: Category[] = ['Tous', 'Méthodologie', 'Vie Campus', 'Tech & Code', 'Événements'];
-
-interface Article {
+type StudyTask = {
   id: string;
-  slug: string;
-  category: Exclude<Category, 'Tous'>;
   title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  readTime: string;
-  patternStyle: string; 
-}
-
-const featuredArticle = {
-  id: 'featured',
-  tag: 'Édition Spéciale',
-  title: 'Guide Stratégique : Comment exceller en Analyse 3 et Algèbre',
-  excerpt:
-    'Maîtriser les deux piliers du semestre 3. Techniques éprouvées, erreurs classiques à éviter, et méthode de révision active pour maximiser vos notes dès la première semaine.',
-  author: 'Nidal H.',
-  readTime: '5 min de lecture',
-  date: '20 Août 2026',
+  subject: string;
+  completed: boolean;
 };
 
-const articles: Article[] = [
-  {
-    id: 'a1',
-    slug: 'erreurs-tds-maths',
-    category: 'Méthodologie',
-    title: 'Les 5 erreurs à éviter lors des TDs de Mathématiques',
-    excerpt: 'Analyse des pièges récurrents observés en TD et comment les transformer en points forts lors des évaluations finales.',
-    author: 'Salma B.',
-    date: '12 Sept 2026',
-    readTime: '4 min',
-    patternStyle: 'from-blue-600 to-indigo-900',
-  },
-  {
-    id: 'a2',
-    slug: 'hackathon-ens-2026',
-    category: 'Événements',
-    title: 'Compte-rendu : Hackathon ENS Tétouan 2026',
-    excerpt: '48h d\'innovation. Retour sur les projets lauréats, les apprentissages collectifs et ce qui attend les participants en 2027.',
-    author: 'Amine K.',
-    date: '10 Sept 2026',
-    readTime: '6 min',
-    patternStyle: 'from-amber-500 to-orange-700',
-  },
-  {
-    id: 'a3',
-    slug: 'python-debutants-s1',
-    category: 'Tech & Code',
-    title: 'Débuter avec Python : Guide complet pour les S1',
-    excerpt: 'Installation, premiers scripts, structures de données. Un parcours pratique conçu spécifiquement pour les étudiants ENS.',
-    author: 'Omar Z.',
-    date: '8 Sept 2026',
-    readTime: '8 min',
-    patternStyle: 'from-emerald-500 to-teal-800',
-  },
-  {
-    id: 'a4',
-    slug: 'organisation-partiels',
-    category: 'Méthodologie',
-    title: 'Comment organiser sa révision pour les partiels de fin de semestre ?',
-    excerpt: 'Plan de révision sur 3 semaines, techniques de mémorisation active et gestion du stress pour performer le jour J.',
-    author: 'Hiba C.',
-    date: '5 Sept 2026',
-    readTime: '5 min',
-    patternStyle: 'from-violet-500 to-purple-900',
-  },
-  {
-    id: 'a5',
-    slug: 'vie-associative-ens',
-    category: 'Vie Campus',
-    title: 'La vie associative à l\'ENS Tétouan : clubs, opportunités et impact',
-    excerpt: 'Comment les clubs universitaires transforment le parcours académique et créent des compétences transversales durables.',
-    author: 'Fatima E.',
-    date: '3 Sept 2026',
-    readTime: '4 min',
-    patternStyle: 'from-rose-500 to-pink-800',
-  },
-  {
-    id: 'a6',
-    slug: 'latex-rapports-tp',
-    category: 'Tech & Code',
-    title: 'Utiliser LaTeX pour rédiger ses rapports de TP comme un pro',
-    excerpt: 'Du template vierge au rendu professionnel : formules, figures, bibliographies. Workflow complet avec Overleaf.',
-    author: 'Rachid A.',
-    date: '1 Sept 2026',
-    readTime: '7 min',
-    patternStyle: 'from-sky-500 to-blue-800',
-  },
-];
+const TASKS_STORAGE_KEY = 'apex-ens-study-tasks-v1';
+const FOCUS_PRESETS = [25, 45, 60, 90];
+const MODE_LABELS: Record<TimerMode, string> = {
+  focus: 'Concentration',
+  shortBreak: 'Petite pause',
+  longBreak: 'Pause longue',
+};
 
+function readSavedTasks(): StudyTask[] {
+  if (typeof window === 'undefined') return [];
 
+  try {
+    const raw = window.localStorage.getItem(TASKS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
 
-// ─── Article Card ─────────────────────────────────────────────────────────────
-function ArticleCard({ article }: { article: Article }) {
+    return parsed.filter((item): item is StudyTask => (
+      item !== null
+      && typeof item === 'object'
+      && typeof item.id === 'string'
+      && typeof item.title === 'string'
+      && typeof item.subject === 'string'
+      && typeof item.completed === 'boolean'
+    ));
+  } catch {
+    return [];
+  }
+}
+
+function formatTime(totalSeconds: number): string {
+  const safeSeconds = Math.max(0, totalSeconds);
+  const minutes = Math.floor(safeSeconds / 60);
+  const seconds = safeSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function getTodayLabel(): string {
+  const label = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(new Date());
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function TaskList({ tasks, setTasks }: {
+  tasks: StudyTask[];
+  setTasks: Dispatch<SetStateAction<StudyTask[]>>;
+}) {
+  const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
+  const { timer, setTaskLabel } = useStudyTimer();
+
+  const completedCount = tasks.filter((task) => task.completed).length;
+  const remainingCount = tasks.length - completedCount;
+  const progress = tasks.length === 0 ? 0 : Math.round((completedCount / tasks.length) * 100);
+
+  const addTask = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
+
+    const newTask: StudyTask = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      title: trimmedTitle,
+      subject: subject.trim(),
+      completed: false,
+    };
+
+    setTasks((current) => [newTask, ...current]);
+    setTitle('');
+    setSubject('');
+  };
+
+  const toggleTask = (taskId: string) => {
+    setTasks((current) => current.map((task) => (
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    )));
+  };
+
+  const deleteTask = (taskId: string) => {
+    const deleted = tasks.find((task) => task.id === taskId);
+    setTasks((current) => current.filter((task) => task.id !== taskId));
+    if (deleted && deleted.title === timer.taskLabel) setTaskLabel('');
+  };
+
+  const clearCompleted = () => {
+    const completedTitles = new Set(tasks.filter((task) => task.completed).map((task) => task.title));
+    setTasks((current) => current.filter((task) => !task.completed));
+    if (completedTitles.has(timer.taskLabel)) setTaskLabel('');
+  };
+
   return (
-    <article className="group bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 flex flex-col overflow-hidden">
-      
-      {/* Card Header (Magazine Cover Style) */}
-      <div className={`h-48 w-full bg-gradient-to-br ${article.patternStyle} relative overflow-hidden flex-shrink-0`}>
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-20 mix-blend-overlay group-hover:scale-110 transition-transform duration-700 ease-out"
-          style={{
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-          }}
-        />
-        
-        {/* Floating Category Badge inside the cover */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/90 backdrop-blur-md font-body text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-sm">
-            {article.category}
-          </span>
-        </div>
-
-        {/* Abstract Graphic Elements */}
-        <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500" />
-        <BookOpen className="absolute bottom-4 right-4 w-12 h-12 text-white/20 group-hover:text-white/40 transition-colors duration-500 transform group-hover:-rotate-12" strokeWidth={1} />
-      </div>
-
-      {/* Card Content */}
-      <div className="p-6 flex flex-col flex-1 bg-white relative">
-        <h2 className="font-heading font-black text-slate-900 text-[17px] leading-snug mb-3 line-clamp-2 group-hover:text-apex-blue transition-colors duration-200">
-          {article.title}
-        </h2>
-
-        <p className="font-body text-[14px] text-slate-500 leading-relaxed line-clamp-2 flex-1 mb-5">
-          {article.excerpt}
-        </p>
-
-        {/* Card footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
-              <User className="w-3 h-3 text-slate-500" />
-            </div>
-            <span className="font-body text-[12px] font-semibold text-slate-700">{article.author}</span>
+    <section
+      aria-labelledby="tasks-heading"
+      className="rounded-3xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-7"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-[#861746]">
+            <ListTodo className="h-4 w-4" aria-hidden="true" />
+            Mon organisation
           </div>
-          <span className="flex items-center gap-1.5 font-body text-[11px] font-medium text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
-            <Clock className="w-3 h-3" /> {article.readTime}
-          </span>
+          <h2 id="tasks-heading" className="font-heading text-2xl font-black tracking-tight text-slate-900">
+            Mes tâches d'étude
+          </h2>
+          <p className="mt-1.5 max-w-md text-sm leading-6 text-slate-500">
+            Transforme tes objectifs en petites étapes concrètes et faciles à suivre.
+          </p>
+        </div>
+
+        <div className="min-w-[84px] rounded-2xl bg-slate-50 px-4 py-3 text-right ring-1 ring-slate-100">
+          <p className="font-heading text-2xl font-black tabular-nums text-slate-900">{remainingCount}</p>
+          <p className="text-xs font-medium text-slate-500">à faire</p>
         </div>
       </div>
-    </article>
+
+      <div className="mt-6">
+        <div className="mb-2 flex items-center justify-between gap-3 text-xs font-semibold">
+          <span className="text-slate-500">Progression des tâches</span>
+          <span className="text-slate-700">
+            {completedCount}/{tasks.length} terminée{completedCount === 1 ? '' : 's'}
+          </span>
+        </div>
+        <div
+          className="h-2 overflow-hidden rounded-full bg-slate-100"
+          role="progressbar"
+          aria-label="Progression des tâches"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progress}
+        >
+          <div className="h-full rounded-full bg-[#861746] transition-[width] duration-300" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
+      <form onSubmit={addTask} className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4">
+        <label htmlFor="study-task-title" className="mb-2 block text-sm font-bold text-slate-800">
+          Ajouter une tâche
+        </label>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <input
+            id="study-task-title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Ex. : Résoudre les exercices 1 à 4"
+            maxLength={140}
+            className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#861746] focus:ring-4 focus:ring-rose-900/5"
+          />
+          <button
+            type="submit"
+            disabled={!title.trim()}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#861746] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#6f1038] focus:outline-none focus:ring-4 focus:ring-rose-900/15 disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Ajouter
+          </button>
+        </div>
+        <label htmlFor="study-task-subject" className="sr-only">Matière (facultatif)</label>
+        <input
+          id="study-task-subject"
+          value={subject}
+          onChange={(event) => setSubject(event.target.value)}
+          placeholder="Matière facultative : Analyse, Algèbre, Physique..."
+          maxLength={60}
+          className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#861746] focus:ring-4 focus:ring-rose-900/5"
+        />
+      </form>
+
+      <div className="mt-5 space-y-2">
+        {tasks.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-300 px-5 py-9 text-center">
+            <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-[#861746]">
+              <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <p className="font-bold text-slate-800">Ta liste commence ici.</p>
+            <p className="mx-auto mt-1 max-w-xs text-sm leading-6 text-slate-500">
+              Ajoute une première tâche pour savoir exactement par quoi commencer.
+            </p>
+          </div>
+        ) : (
+          tasks.map((task) => (
+            <div
+              key={task.id}
+              className={`group flex items-start gap-3 rounded-xl border p-3 transition-colors sm:p-4 ${
+                task.completed
+                  ? 'border-slate-100 bg-slate-50/80'
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => toggleTask(task.id)}
+                aria-label={task.completed ? `Marquer « ${task.title} » comme non terminée` : `Marquer « ${task.title} » comme terminée`}
+                aria-pressed={task.completed}
+                className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition focus:outline-none focus:ring-4 focus:ring-rose-900/10 ${
+                  task.completed
+                    ? 'border-[#861746] bg-[#861746] text-white'
+                    : 'border-slate-300 text-transparent hover:border-[#861746]'
+                }`}
+              >
+                {task.completed
+                  ? <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                  : <Circle className="h-5 w-5" aria-hidden="true" />}
+              </button>
+
+              <div className="min-w-0 flex-1">
+                <p className={`break-words text-sm font-semibold leading-6 ${task.completed ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
+                  {task.title}
+                </p>
+                {task.subject && <p className="mt-1 text-xs font-medium text-slate-500">{task.subject}</p>}
+                {!task.completed && (
+                  <button
+                    type="button"
+                    onClick={() => setTaskLabel(task.title)}
+                    className="mt-2 text-xs font-bold text-[#861746] underline decoration-rose-200 underline-offset-4 transition hover:text-[#6f1038]"
+                  >
+                    {timer.taskLabel === task.title ? 'Tâche sélectionnée' : 'Étudier cette tâche'}
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => deleteTask(task.id)}
+                aria-label={`Supprimer la tâche « ${task.title} »`}
+                title="Supprimer la tâche"
+                className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-900/15 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      {completedCount > 0 && (
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={clearCompleted}
+            className="text-xs font-semibold text-slate-500 underline decoration-slate-300 underline-offset-4 transition hover:text-[#861746]"
+          >
+            Effacer les tâches terminées
+          </button>
+        </div>
+      )}
+
+      <p className="mt-5 flex items-center gap-2 text-xs leading-5 text-slate-400">
+        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+        Enregistrement automatique sur cet appareil.
+      </p>
+    </section>
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+function PomodoroPanel({ tasks }: { tasks: StudyTask[] }) {
+  const { timer, selectMode, toggleTimer, resetTimer, updateDurations, setTaskLabel } = useStudyTimer();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [focusDraft, setFocusDraft] = useState(String(timer.durations.focus));
+  const [shortBreakDraft, setShortBreakDraft] = useState(String(timer.durations.shortBreak));
+  const [longBreakDraft, setLongBreakDraft] = useState(String(timer.durations.longBreak));
+
+  useEffect(() => {
+    setFocusDraft(String(timer.durations.focus));
+    setShortBreakDraft(String(timer.durations.shortBreak));
+    setLongBreakDraft(String(timer.durations.longBreak));
+  }, [timer.durations]);
+
+  const totalSeconds = timer.durations[timer.mode] * 60;
+  const progress = totalSeconds > 0
+    ? Math.min(100, Math.max(0, ((totalSeconds - timer.secondsLeft) / totalSeconds) * 100))
+    : 0;
+  const ModeIcon = timer.mode === 'focus' ? Target : Coffee;
+  const availableTasks = tasks.filter((task) => !task.completed);
+
+  const applyDurations = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const focus = Number(focusDraft);
+    const shortBreak = Number(shortBreakDraft);
+    const longBreak = Number(longBreakDraft);
+
+    if (
+      !Number.isFinite(focus) || focus < 1 || focus > 180
+      || !Number.isFinite(shortBreak) || shortBreak < 1 || shortBreak > 60
+      || !Number.isFinite(longBreak) || longBreak < 1 || longBreak > 60
+    ) return;
+
+    const nextDurations: StudyDurations = { focus, shortBreak, longBreak };
+    updateDurations(nextDurations);
+    setSettingsOpen(false);
+  };
+
+  const applyFocusPreset = (minutes: number) => {
+    if (timer.isRunning) return;
+    const nextDurations = { ...timer.durations, focus: minutes };
+    setFocusDraft(String(minutes));
+    updateDurations(nextDurations);
+  };
+
+  return (
+    <section
+      aria-labelledby="pomodoro-heading"
+      className="relative overflow-hidden rounded-3xl bg-[#3D0821] p-5 text-white shadow-lg shadow-rose-950/10 sm:p-7"
+    >
+      <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-rose-300/10 blur-3xl" />
+
+      <div className="relative z-10 flex items-start justify-between gap-4">
+        <div>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-semibold text-rose-100">
+            <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+            Minuteur Pomodoro
+          </div>
+          <h2 id="pomodoro-heading" className="font-heading text-xl font-bold sm:text-2xl">
+            Ta session, ton rythme.
+          </h2>
+          <p className="mt-2 max-w-sm text-sm leading-6 text-rose-100/75">
+            25 minutes, une heure ou plus : choisis la durée qui correspond à ton travail.
+          </p>
+        </div>
+        <div className="hidden rounded-2xl border border-white/10 bg-white/10 p-3 sm:block">
+          <ModeIcon className="h-6 w-6 text-rose-100" aria-hidden="true" />
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-6 grid grid-cols-3 gap-1 rounded-xl border border-white/10 bg-black/10 p-1">
+        {(['focus', 'shortBreak', 'longBreak'] as TimerMode[]).map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => selectMode(mode)}
+            aria-pressed={timer.mode === mode}
+            className={`rounded-lg px-2 py-2.5 text-xs font-semibold transition-colors sm:text-sm ${
+              timer.mode === mode
+                ? 'bg-white text-[#3D0821]'
+                : 'text-rose-100/80 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            {MODE_LABELS[mode]}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center py-7">
+        <div
+          className="grid h-48 w-48 place-items-center rounded-full p-2 sm:h-52 sm:w-52"
+          style={{ background: `conic-gradient(#F9A8D4 ${progress}%, rgba(255,255,255,0.14) ${progress}% 100%)` }}
+          role="img"
+          aria-label={`Progression du minuteur : ${Math.round(progress)} pour cent`}
+        >
+          <div className="flex h-full w-full flex-col items-center justify-center rounded-full bg-[#3D0821]">
+            <span className="font-mono text-5xl font-bold tracking-tight tabular-nums sm:text-6xl">
+              {formatTime(timer.secondsLeft)}
+            </span>
+            <span className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-rose-100/65">
+              {timer.sessionFinished ? 'Session terminée' : timer.isRunning ? 'Reste concentré' : 'Prêt à démarrer'}
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-6 flex w-full max-w-xs gap-3">
+          <button
+            type="button"
+            onClick={toggleTimer}
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 font-bold text-[#3D0821] transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-white/25"
+          >
+            {timer.isRunning
+              ? <Pause className="h-4 w-4" aria-hidden="true" />
+              : <Play className="h-4 w-4 fill-current" aria-hidden="true" />}
+            {timer.isRunning ? 'Pause' : timer.sessionFinished ? 'Relancer' : timer.hasStarted ? 'Reprendre' : 'Démarrer'}
+          </button>
+          <button
+            type="button"
+            onClick={resetTimer}
+            className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-4 text-white transition hover:bg-white/10 focus:outline-none focus:ring-4 focus:ring-white/20"
+            aria-label="Réinitialiser le minuteur"
+            title="Réinitialiser"
+          >
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+
+        <p aria-live="polite" className="mt-4 min-h-5 text-center text-sm text-rose-100/85">
+          {timer.sessionFinished
+            ? timer.mode === 'focus'
+              ? 'Session terminée. Bien joué ! Prends une pause avant de continuer.'
+              : 'Pause terminée. Tu peux reprendre quand tu es prêt.'
+            : timer.isRunning
+              ? 'Le minuteur continue même lorsque tu navigues vers une autre page.'
+              : 'Mets-toi à l’aise et lance ta session quand tu es prêt.'}
+        </p>
+      </div>
+
+      <div className="relative z-10 border-t border-white/10 pt-5">
+        <label htmlFor="timer-task" className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-rose-100/70">
+          Sur quoi vas-tu travailler ?
+        </label>
+        <select
+          id="timer-task"
+          value={timer.taskLabel}
+          onChange={(event) => setTaskLabel(event.target.value)}
+          className="w-full rounded-xl border border-white/15 bg-[#52112f] px-3.5 py-3 text-sm text-white outline-none transition focus:border-rose-200 focus:ring-4 focus:ring-rose-200/10"
+        >
+          <option value="" className="bg-[#3D0821]">Choisir une tâche (facultatif)</option>
+          {timer.taskLabel && !availableTasks.some((task) => task.title === timer.taskLabel) && (
+            <option value={timer.taskLabel} className="bg-[#3D0821]">{timer.taskLabel}</option>
+          )}
+          {availableTasks.map((task) => (
+            <option key={task.id} value={task.title} className="bg-[#3D0821]">
+              {task.subject ? `${task.subject} — ${task.title}` : task.title}
+            </option>
+          ))}
+        </select>
+
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <p className="text-xs font-semibold text-rose-100/70">Durée de concentration</p>
+          <button
+            type="button"
+            onClick={() => setSettingsOpen((open) => !open)}
+            aria-expanded={settingsOpen}
+            aria-controls="timer-settings"
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-white/85 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+          >
+            <Settings2 className="h-3.5 w-3.5" aria-hidden="true" />
+            {settingsOpen ? 'Fermer' : 'Personnaliser'}
+          </button>
+        </div>
+
+        <div className="mt-2 grid grid-cols-4 gap-2">
+          {FOCUS_PRESETS.map((minutes) => (
+            <button
+              key={minutes}
+              type="button"
+              onClick={() => applyFocusPreset(minutes)}
+              disabled={timer.isRunning}
+              aria-pressed={timer.durations.focus === minutes}
+              className={`rounded-xl border px-2 py-2.5 text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                timer.durations.focus === minutes
+                  ? 'border-rose-200 bg-rose-100 text-[#3D0821]'
+                  : 'border-white/15 bg-white/[0.04] text-rose-100/85 hover:bg-white/10'
+              }`}
+            >
+              {minutes >= 60 ? `${minutes / 60} h` : `${minutes} min`}
+            </button>
+          ))}
+        </div>
+
+        {settingsOpen && (
+          <form id="timer-settings" onSubmit={applyDurations} className="mt-4 rounded-2xl border border-white/10 bg-black/10 p-4">
+            <p className="mb-3 text-xs leading-5 text-rose-100/70">
+              Les durées sont en minutes. Mets le minuteur en pause pour modifier les réglages ; appliquer les changements réinitialise le temps de la session choisie.
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label htmlFor="focus-minutes" className="mb-1.5 block text-[11px] font-semibold text-rose-100/80">Concentration</label>
+                <input
+                  id="focus-minutes"
+                  type="number"
+                  min={1}
+                  max={180}
+                  required
+                  disabled={timer.isRunning}
+                  value={focusDraft}
+                  onChange={(event) => setFocusDraft(event.target.value)}
+                  className="w-full rounded-lg border border-white/15 bg-[#52112f] px-2.5 py-2.5 text-sm text-white outline-none focus:border-rose-200 disabled:opacity-50"
+                />
+              </div>
+              <div>
+                <label htmlFor="short-break-minutes" className="mb-1.5 block text-[11px] font-semibold text-rose-100/80">Petite pause</label>
+                <input
+                  id="short-break-minutes"
+                  type="number"
+                  min={1}
+                  max={60}
+                  required
+                  disabled={timer.isRunning}
+                  value={shortBreakDraft}
+                  onChange={(event) => setShortBreakDraft(event.target.value)}
+                  className="w-full rounded-lg border border-white/15 bg-[#52112f] px-2.5 py-2.5 text-sm text-white outline-none focus:border-rose-200 disabled:opacity-50"
+                />
+              </div>
+              <div>
+                <label htmlFor="long-break-minutes" className="mb-1.5 block text-[11px] font-semibold text-rose-100/80">Pause longue</label>
+                <input
+                  id="long-break-minutes"
+                  type="number"
+                  min={1}
+                  max={60}
+                  required
+                  disabled={timer.isRunning}
+                  value={longBreakDraft}
+                  onChange={(event) => setLongBreakDraft(event.target.value)}
+                  className="w-full rounded-lg border border-white/15 bg-[#52112f] px-2.5 py-2.5 text-sm text-white outline-none focus:border-rose-200 disabled:opacity-50"
+                />
+              </div>
+            </div>
+            {(!timer.isRunning && (
+              Number(focusDraft) < 1 || Number(focusDraft) > 180
+              || Number(shortBreakDraft) < 1 || Number(shortBreakDraft) > 60
+              || Number(longBreakDraft) < 1 || Number(longBreakDraft) > 60
+            )) && (
+              <p className="mt-3 text-xs text-rose-200">Concentration : 1–180 min. Pauses : 1–60 min.</p>
+            )}
+            <button
+              type="submit"
+              disabled={timer.isRunning}
+              className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#3D0821] transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              Enregistrer les durées
+            </button>
+          </form>
+        )}
+      </div>
+
+      <p className="relative z-10 mt-5 border-t border-white/10 pt-4 text-xs leading-5 text-rose-100/60">
+        Tes réglages et le temps restant sont enregistrés automatiquement dans ce navigateur.
+      </p>
+    </section>
+  );
+}
+
+function StudyMethodCard() {
+  return (
+    <section aria-labelledby="study-method-heading" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+          <BookMarked className="h-5 w-5" aria-hidden="true" />
+        </div>
+        <div>
+          <h2 id="study-method-heading" className="font-heading text-xl font-black text-slate-900">Une méthode simple</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-500">Pour commencer sans te disperser.</p>
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-4">
+        <div className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-50 text-xs font-black text-[#861746]">1</span>
+          <div>
+            <p className="text-sm font-bold text-slate-800">Choisis une tâche précise</p>
+            <p className="mt-1 text-sm leading-6 text-slate-500">Par exemple : résoudre deux exercices plutôt que « réviser tout le chapitre ».</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-50 text-xs font-black text-[#861746]">2</span>
+          <div>
+            <p className="text-sm font-bold text-slate-800">Choisis une durée réaliste</p>
+            <p className="mt-1 text-sm leading-6 text-slate-500">Une courte session ou une heure complète : adapte le minuteur à ton objectif.</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-50 text-xs font-black text-[#861746]">3</span>
+          <div>
+            <p className="text-sm font-bold text-slate-800">Rappelle-toi ce que tu as appris</p>
+            <p className="mt-1 text-sm leading-6 text-slate-500">Ferme le cours et essaie de refaire l'exercice ou d'expliquer l'idée de mémoire.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ArticlesPage() {
-  const [activeCategory, setActiveCategory] = useState<Category>('Tous');
+  const today = useMemo(() => getTodayLabel(), []);
+  const [tasks, setTasks] = useState<StudyTask[]>(readSavedTasks);
 
-  const filtered = activeCategory === 'Tous'
-    ? articles
-    : articles.filter(a => a.category === activeCategory);
-
-  const above = filtered.slice(0, 3);
-  const below  = filtered.slice(3);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+    } catch {
+      // Tasks remain usable for this session when local storage is unavailable.
+    }
+  }, [tasks]);
 
   return (
     <>
+      {/* Keep the current activePage key for existing Header navigation compatibility. */}
       <Header activePage="articles" />
 
-      <main className="bg-[#f8fafc] min-h-screen" id="main-content">
-        
-        {/* ══════════════════════════════════════════════════════════════
-            SECTION 1 — Editorial Hero (Premium Vibe)
-        ══════════════════════════════════════════════════════════════ */}
-        <section aria-labelledby="featured-heading" className="pt-8 pb-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="bg-[#0a1128] rounded-[2rem] p-8 md:p-14 relative overflow-hidden shadow-2xl border border-slate-800">
-              
-              {/* Background Glows & Texture */}
-              <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen translate-x-1/3 -translate-y-1/3" />
-              <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[80px] pointer-events-none mix-blend-screen -translate-x-1/4 translate-y-1/4" />
-              
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                {/* Content Side */}
-                <div className="lg:col-span-7">
-                  <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/20 text-amber-400 font-body text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    {featuredArticle.tag}
-                  </div>
+      <main id="main-content" className="min-h-screen bg-[#f8fafc] pb-16">
+        <section aria-labelledby="study-space-heading" className="pb-8 pt-8 sm:pb-10 sm:pt-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-10 lg:p-12">
+              <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full bg-rose-100/80 blur-3xl" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-36 left-1/3 h-72 w-72 rounded-full bg-amber-100/60 blur-3xl" />
 
-                  <h1 id="featured-heading" className="font-heading font-black text-white text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mb-6 tracking-tight">
-                    {featuredArticle.title}
+              <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.13em] text-[#861746]">
+                    <Target className="h-3.5 w-3.5" aria-hidden="true" />
+                    APEX Focus · Espace d'étude
+                  </div>
+                  <p className="mb-2 text-sm font-semibold text-slate-500">{today}</p>
+                  <h1 id="study-space-heading" className="font-heading text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                    Organise tes études.
+                    <br />
+                    <span className="text-[#861746]">Avance à ton rythme.</span>
                   </h1>
-
-                  <p className="font-body text-slate-300 text-[16px] sm:text-[18px] leading-relaxed mb-8 max-w-2xl">
-                    {featuredArticle.excerpt}
+                  <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+                    Prépare ta liste de travail, choisis ta durée de concentration et reprends ta session même après avoir changé de page.
                   </p>
-
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                    <Link
-                      to="#"
-                      className="group inline-flex items-center gap-3 bg-white text-[#0a1128] font-body font-bold text-[15px] px-8 py-4 rounded-xl hover:bg-slate-100 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] focus:ring-4 focus:ring-white/30"
-                    >
-                      Lire l'édition spéciale 
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                    <a href="#mes-taches" className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#861746] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#6f1038] focus:outline-none focus:ring-4 focus:ring-rose-900/15">
+                      Planifier mon travail
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </a>
+                    <Link to="/vault" className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-bold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-900/5">
+                      <BookOpen className="h-4 w-4 text-[#861746]" aria-hidden="true" />
+                      Trouver mes cours
                     </Link>
-                    
-                    <div className="flex items-center gap-4 text-slate-400 font-body text-[13px] font-medium border-l border-slate-700 pl-6 h-10">
-                      <span className="flex items-center gap-1.5 text-white">
-                        <User className="w-4 h-4 text-slate-500" /> {featuredArticle.author}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-slate-500" /> {featuredArticle.readTime}
-                      </span>
-                    </div>
                   </div>
                 </div>
 
-                {/* Visual Side (Abstract Representation) */}
-                <div className="hidden lg:flex lg:col-span-5 justify-end">
-                  <div className="relative w-72 h-72">
-                    <div className="absolute inset-0 border-2 border-dashed border-slate-700 rounded-full animate-[spin_60s_linear_infinite]" />
-                    <div className="absolute inset-4 border border-blue-500/30 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <TrendingUp className="w-24 h-24 text-amber-400 opacity-80" strokeWidth={1} />
+                <div className="grid shrink-0 grid-cols-2 gap-3 sm:max-w-sm lg:w-72">
+                  <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 sm:p-5">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-[#861746]">
+                      <ListTodo className="h-5 w-5" aria-hidden="true" />
                     </div>
+                    <p className="font-heading text-base font-bold text-slate-900">Mes tâches</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">Savoir quoi faire ensuite.</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 sm:p-5">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                      <Clock3 className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <p className="font-heading text-base font-bold text-slate-900">Pomodoro flexible</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">De 1 à 180 minutes.</p>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* ══════════════════════════════════════════════════════════════
-              SECTION 2 — Filter Bar (Pill Tabs)
-          ══════════════════════════════════════════════════════════════ */}
-          <nav
-            aria-label="Filtrer les articles"
-            className="flex flex-wrap items-center gap-3 mt-10 mb-8 border-b border-slate-200/60 pb-6"
-          >
-            <span className="font-body text-[14px] font-bold text-slate-400 uppercase tracking-widest mr-2 hidden sm:block">
-              Explorer
-            </span>
-            {CATEGORIES.map(cat => {
-              const isActive = activeCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`font-body text-[14px] font-bold px-5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-apex-blue/50 ${
-                    isActive
-                      ? 'bg-apex-blue text-white shadow-md shadow-blue-500/20'
-                      : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-200 hover:bg-blue-50 hover:text-apex-blue'
-                  }`}
-                  aria-pressed={isActive}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-            <div className="ml-auto flex items-center gap-2 font-body text-[13px] font-semibold text-slate-400 bg-white px-3 py-1.5 rounded-lg border border-slate-200">
-               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-               {filtered.length} Résultat{filtered.length !== 1 ? 's' : ''}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
+            <div id="mes-taches" className="scroll-mt-24">
+              <TaskList tasks={tasks} setTasks={setTasks} />
             </div>
-          </nav>
-
-          {/* ══════════════════════════════════════════════════════════════
-              SECTION 3A — Article Grid (Top Row)
-          ══════════════════════════════════════════════════════════════ */}
-          {above.length > 0 && (
-            <section aria-label="Articles récents" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {above.map(article => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </section>
-          )}
-
-          {/* Empty State */}
-          {filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-3xl border border-dashed border-slate-300">
-              <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-5 border border-slate-100">
-                <BookOpen className="w-8 h-8 text-slate-300" strokeWidth={1.5} />
-              </div>
-              <p className="font-heading font-black text-slate-800 text-xl mb-2">
-                Aucun article publié
-              </p>
-              <p className="font-body text-slate-500 text-[15px]">
-                Nous préparons du nouveau contenu pour cette catégorie.
-              </p>
-            </div>
-          )}
-
-          {/* ══════════════════════════════════════════════════════════════
-              SECTION 4 — The Interruption (Vault Funnel)
-          ══════════════════════════════════════════════════════════════ */}
-          {above.length > 0 && (
-            <aside
-              aria-label="Accéder au Vault Académique"
-              className="bg-gradient-to-r from-[#0a1128] to-apex-blue rounded-[2rem] p-8 md:p-10 mt-16 mb-16 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden"
-            >
-              {/* Decorative elements */}
-              <div className="absolute right-0 top-0 w-64 h-full bg-white/5 skew-x-12 translate-x-1/2 pointer-events-none" />
-              
-              <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
-                <div className="w-16 h-16 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-md">
-                  <TrendingUp className="w-8 h-8 text-amber-400" strokeWidth={2} />
+            <div className="space-y-6">
+              <PomodoroPanel tasks={tasks} />
+              <StudyMethodCard />
+              <Link to="/vault" className="group flex items-center justify-between gap-4 rounded-3xl border border-rose-100 bg-rose-50/70 p-5 transition hover:border-rose-200 hover:bg-rose-50 sm:p-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#861746] shadow-sm">
+                    <BookOpen className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="font-heading font-black text-slate-900">Besoin d'un cours ou d'un TD ?</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-600">Retrouve les ressources dans le Vault académique.</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-heading font-black text-white text-2xl leading-snug mb-2">
-                    Assez de lecture. <span className="text-amber-400">Passez à la pratique.</span>
-                  </p>
-                  <p className="font-body text-[15px] text-blue-100 leading-relaxed max-w-xl">
-                    Appliquez ces stratégies dès maintenant. Accédez à la plus grande base de données d'anciens examens et TDs de l'ENS Tétouan.
-                  </p>
-                </div>
-              </div>
-
-              <Link
-                to="/vault"
-                className="group w-full md:w-auto inline-flex items-center justify-center gap-2 bg-amber-400 text-slate-900 font-body font-black text-[15px] px-8 py-4 rounded-xl hover:bg-amber-300 transition-all duration-300 shadow-lg hover:shadow-amber-400/30 flex-shrink-0 relative z-10 hover:-translate-y-1"
-                aria-label="Ouvrir le Vault Académique"
-              >
-                Accéder au Vault
-                <ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
+                <ArrowRight className="h-5 w-5 shrink-0 text-[#861746] transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
-            </aside>
-          )}
+            </div>
+          </div>
 
-          {/* ══════════════════════════════════════════════════════════════
-              SECTION 3B — Remaining articles (below banner)
-          ══════════════════════════════════════════════════════════════ */}
-          {below.length > 0 && (
-            <section aria-label="Plus d'articles" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
-              {below.map(article => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </section>
-          )}
-
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm leading-6 text-slate-500">
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
+            <p>
+              Tes tâches et tes réglages sont enregistrés automatiquement dans ce navigateur. Le minuteur reste visible pendant la navigation lorsque tu démarres une session ; aucune donnée n'est synchronisée avec un compte.
+            </p>
+          </div>
         </div>
       </main>
 

@@ -5,7 +5,7 @@ export default function ClubSection() {
   return (
     <section
       id="club"
-      className="w-full bg-[#0a1128] py-24 lg:py-32 relative overflow-hidden border-t border-slate-800"
+      className="w-full bg-[#1A0510] py-24 lg:py-32 relative overflow-hidden border-t border-slate-800"
       aria-labelledby="scroll-stopper-heading"
     >
       {/* ════════ BACKGROUND EFFECTS ════════ */}
@@ -13,7 +13,7 @@ export default function ClubSection() {
       <div
         className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-30 mix-blend-screen"
         style={{
-          background: 'radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139,26,74,0.4) 0%, transparent 70%)',
           transform: 'translate(20%, -20%)'
         }}
         aria-hidden="true"
@@ -67,7 +67,7 @@ export default function ClubSection() {
             {/* Micro-proof points */}
             <div className="flex flex-wrap items-center gap-6 mt-8 mb-4">
               <div className="flex items-center gap-2 text-slate-400 font-body text-sm">
-                <Users className="w-5 h-5 text-blue-400" />
+                <Users className="w-5 h-5 text-apex-gold" />
                 <span>Réseau étudiant actif</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400 font-body text-sm">
@@ -96,16 +96,16 @@ export default function ClubSection() {
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-2 rounded-[2rem] shadow-2xl relative overflow-hidden group">
               
               {/* Inner Dashed Dropzone Area (Appears like a real upload zone) */}
-              <div className="border-2 border-dashed border-white/20 group-hover:border-blue-400/50 rounded-[1.5rem] p-8 sm:p-10 transition-colors duration-300 bg-white/[0.02] flex flex-col items-center text-center">
+              <div className="border-2 border-dashed border-white/20 group-hover:border-rose-400/50 rounded-[1.5rem] p-8 sm:p-10 transition-colors duration-300 bg-white/[0.02] flex flex-col items-center text-center">
                 
                 {/* Pulsing Upload Icon Block */}
-                <div className="inline-flex items-center justify-center bg-blue-500/20 border border-blue-400/30 w-16 h-16 rounded-2xl mb-6 shadow-inner relative">
-                  <Upload className="w-8 h-8 text-blue-400 group-hover:-translate-y-1 transition-transform duration-300" strokeWidth={2} aria-hidden="true" />
+                <div className="inline-flex items-center justify-center bg-rose-800/30 border border-apex-gold/20 w-16 h-16 rounded-2xl mb-6 shadow-inner relative">
+                  <Upload className="w-8 h-8 text-apex-gold group-hover:-translate-y-1 transition-transform duration-300" strokeWidth={2} aria-hidden="true" />
                   
                   {/* Status Indicator */}
                   <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#0a1128]" />
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#1A0510]" />
                   </span>
                 </div>
 
@@ -122,10 +122,10 @@ export default function ClubSection() {
                 {/* Bright White Secondary CTA */}
                 <button
                   type="button"
-                  className="w-full bg-white hover:bg-blue-50 text-slate-900 font-body font-bold text-[15px] px-6 py-4 rounded-xl mt-8 transition-all duration-200 flex justify-center items-center gap-2.5 shadow-lg hover:shadow-xl active:scale-[0.98] focus:ring-4 focus:ring-white/20"
+                  className="w-full bg-white hover:bg-apex-cream text-slate-900 font-body font-bold text-[15px] px-6 py-4 rounded-xl mt-8 transition-all duration-200 flex justify-center items-center gap-2.5 shadow-lg hover:shadow-xl active:scale-[0.98] focus:ring-4 focus:ring-white/20"
                   aria-label="Uploader un document"
                 >
-                  <FileUp className="w-5 h-5 text-blue-600" strokeWidth={2.2} aria-hidden="true" />
+                  <FileUp className="w-5 h-5 text-apex-blue" strokeWidth={2.2} aria-hidden="true" />
                   <span>Partager un document</span>
                 </button>
 
@@ -142,3 +142,5 @@ export default function ClubSection() {
     </section>
   );
 }
+
+

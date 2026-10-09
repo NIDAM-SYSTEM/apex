@@ -38,8 +38,8 @@ const folders = [
     icon: <BookOpen className="h-5 w-5" strokeWidth={1.8} />,
     name: "Mathématiques",
     count: "84 fichiers",
-    bg: "bg-blue-50 border-blue-100 text-[#2563eb]",
-    dot: "bg-[#2563eb]",
+    bg: "bg-apex-cream border-apex-border-light text-[#8B1A4A]",
+    dot: "bg-[#8B1A4A]",
   },
   {
     id: "f2",
@@ -125,7 +125,7 @@ function VaultPreview() {
               </p>
 
               <div className="space-y-1">
-                <div className="flex items-center gap-2 rounded-lg bg-[#0f2560] px-3 py-2 text-[10px] font-semibold text-white">
+                <div className="flex items-center gap-2 rounded-lg bg-[#3D0821] px-3 py-2 text-[10px] font-semibold text-white">
                   <FolderOpen className="h-3.5 w-3.5" />
                   Toutes les ressources
                 </div>
@@ -177,7 +177,7 @@ function VaultPreview() {
             {/* Header */}
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#2563eb]">
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#8B1A4A]">
                   Vault Académique
                 </p>
 
@@ -190,11 +190,11 @@ function VaultPreview() {
                 </p>
               </div>
 
-              <div className="rounded-xl bg-blue-50 px-3 py-2 text-right">
-                <p className="text-[9px] font-medium text-blue-500">
+              <div className="rounded-xl bg-apex-cream px-3 py-2 text-right">
+                <p className="text-[9px] font-medium text-rose-700">
                   DISPONIBLE
                 </p>
-                <p className="mt-0.5 text-xs font-bold text-[#0f2560]">
+                <p className="mt-0.5 text-xs font-bold text-[#3D0821]">
                   250+ fichiers
                 </p>
               </div>
@@ -250,7 +250,7 @@ function VaultPreview() {
                   Ajoutés récemment
                 </p>
 
-                <span className="text-[9px] font-semibold text-[#2563eb]">
+                <span className="text-[9px] font-semibold text-[#8B1A4A]">
                   Voir tout
                 </span>
               </div>
@@ -259,7 +259,7 @@ function VaultPreview() {
 
                 <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-100">
-                    <FileText className="h-3.5 w-3.5 text-[#2563eb]" />
+                    <FileText className="h-3.5 w-3.5 text-[#8B1A4A]" />
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -342,7 +342,7 @@ export default function PopularResources() {
           <div className="max-w-xl">
 
             {/* Eyebrow */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#2563eb]">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-apex-border-light bg-apex-cream px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#8B1A4A]">
               <FolderOpen className="h-3.5 w-3.5" strokeWidth={2} />
               Vault Académique
             </div>
@@ -353,7 +353,7 @@ export default function PopularResources() {
               className="font-heading text-3xl font-bold leading-[1.08] tracking-[-0.025em] text-slate-900 sm:text-4xl lg:text-5xl"
             >
               Tout ce dont tu as besoin pour{" "}
-              <span className="text-[#2563eb]">
+              <span className="text-[#8B1A4A]">
                 avancer plus vite.
               </span>
             </h2>
@@ -380,7 +380,7 @@ export default function PopularResources() {
                     } ${index > 0 ? "pl-4 sm:pl-6" : ""}`}
                   >
                     <div className="flex items-center gap-2">
-                      <Icon className="h-3.5 w-3.5 text-[#2563eb]" />
+                      <Icon className="h-3.5 w-3.5 text-[#8B1A4A]" />
                       <span className="text-xl font-bold tracking-tight text-slate-900">
                         {stat.value}
                       </span>
@@ -399,7 +399,7 @@ export default function PopularResources() {
 
               <Link
                 to="/vault"
-                className="group inline-flex items-center gap-2.5 rounded-xl bg-[#0f2560] px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#163274] hover:shadow-lg"
+                className="group inline-flex items-center gap-2.5 rounded-xl bg-[#3D0821] px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-stone-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#5C1232] hover:shadow-lg"
               >
                 Explorer le Vault
 
@@ -425,3 +425,5 @@ export default function PopularResources() {
     </section>
   );
 }
+
+

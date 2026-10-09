@@ -15,7 +15,7 @@ const categories = [
     icon: <Building2 className="w-7 h-7" strokeWidth={1.5} />,
     label: 'Administration',
     sub: 'Inscriptions, attestations, cartes.',
-    color: 'text-apex-blue bg-blue-50 border-blue-100',
+    color: 'text-apex-blue bg-apex-cream border-apex-border-light',
   },
   {
     id: 'exams',
@@ -86,7 +86,7 @@ function AccordionItem({ item, isOpen, onToggle }: {
   onToggle: () => void;
 }) {
   return (
-    <div className={`border rounded-2xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-blue-200 bg-white shadow-md shadow-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
+    <div className={`border rounded-2xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-apex-border bg-white shadow-md shadow-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
       <button
         type="button"
         onClick={onToggle}
@@ -96,7 +96,7 @@ function AccordionItem({ item, isOpen, onToggle }: {
         <span className={`font-body text-[15px] font-bold leading-snug transition-colors duration-200 ${isOpen ? 'text-apex-blue' : 'text-slate-800 group-hover:text-apex-blue'}`}>
           {item.question}
         </span>
-        <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-apex-blue text-white rotate-180' : 'bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-apex-blue'}`}>
+        <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'bg-apex-blue text-white rotate-180' : 'bg-slate-100 text-slate-500 group-hover:bg-apex-cream group-hover:text-apex-blue'}`}>
           {isOpen
             ? <Minus className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />
             : <Plus  className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />
@@ -109,7 +109,7 @@ function AccordionItem({ item, isOpen, onToggle }: {
       >
         <div className="overflow-hidden">
           <div className="px-6 pb-6 pt-2">
-            <div className="w-8 h-1 bg-blue-100 rounded-full mb-4"></div>
+            <div className="w-8 h-1 bg-rose-100 rounded-full mb-4"></div>
             <p className="font-body text-[14.5px] text-slate-600 leading-relaxed">
               {item.answer}
             </p>
@@ -137,20 +137,20 @@ export default function HelpPage() {
             SECTION 1 — The Omnibox Hero (Deep Tech Vibe)
         ────────────────────────────────────────────────────────────── */}
         <section
-          className="bg-[#0a1128] pt-24 pb-40 relative overflow-hidden"
+          className="bg-[#1A0510] pt-24 pb-40 relative overflow-hidden"
           aria-labelledby="help-hero-heading"
         >
           {/* Background Glows */}
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen" aria-hidden="true" />
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-apex-blue/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen" aria-hidden="true" />
           <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" aria-hidden="true" />
 
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center relative z-10">
             
             {/* System Status Tag */}
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest text-blue-300 mb-6 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 bg-rose-700/10 border border-rose-400/20 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest text-rose-300 mb-6 backdrop-blur-sm">
               <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-700"></span>
               </span>
               Moteur de Résolution APEX
             </div>
@@ -161,7 +161,7 @@ export default function HelpPage() {
               className="font-heading font-black text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-6 tracking-tight"
             >
               Le Hub Central. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">Trouvez toutes les réponses.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-rose-200">Trouvez toutes les réponses.</span>
             </h1>
             
             <p className="font-body text-slate-300 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
@@ -170,9 +170,9 @@ export default function HelpPage() {
 
             {/* The "Spotlight" Search Bar */}
             <div className="relative group max-w-2xl mx-auto transform transition-all duration-300 focus-within:scale-[1.02]">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-apex-blue rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-rose-400 to-apex-blue rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition-opacity duration-300"></div>
               
-              <div className="relative flex items-center bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent focus-within:border-blue-400 transition-colors">
+              <div className="relative flex items-center bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent focus-within:border-rose-400 transition-colors">
                 <div className="pl-6 pr-3 text-apex-blue">
                   <Search className="w-6 h-6" strokeWidth={2.5} aria-hidden="true" />
                 </div>
@@ -248,7 +248,7 @@ export default function HelpPage() {
               {/* LEFT COLUMN: Popular Guides (Structured like Official Files) */}
               <div className="lg:col-span-7">
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-apex-blue">
+                  <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center text-apex-blue">
                     <Sparkles className="w-5 h-5" strokeWidth={2.5} />
                   </div>
                   <div>
@@ -264,7 +264,7 @@ export default function HelpPage() {
                     <a
                       key={guide.id}
                       href={`#guide-${guide.id}`}
-                      className="group flex flex-col sm:flex-row sm:items-center gap-4 bg-white border border-slate-200 rounded-2xl p-5 hover:border-blue-300 hover:shadow-lg transition-all duration-200"
+                      className="group flex flex-col sm:flex-row sm:items-center gap-4 bg-white border border-slate-200 rounded-2xl p-5 hover:border-rose-300 hover:shadow-lg transition-all duration-200"
                       aria-label={guide.title}
                     >
                       {/* Badge / Status */}
@@ -285,14 +285,14 @@ export default function HelpPage() {
                       </div>
 
                       {/* Action */}
-                      <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 group-hover:bg-blue-50 text-slate-400 group-hover:text-apex-blue transition-colors">
+                      <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 group-hover:bg-apex-cream text-slate-400 group-hover:text-apex-blue transition-colors">
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" strokeWidth={2} />
                       </div>
                     </a>
                   ))}
                 </div>
                 
-                <button className="mt-6 font-body text-[14px] font-bold text-apex-blue hover:text-blue-800 flex items-center gap-2 transition-colors">
+                <button className="mt-6 font-body text-[14px] font-bold text-apex-blue hover:text-rose-900 flex items-center gap-2 transition-colors">
                   Voir l'intégralité des 50+ guides <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -369,3 +369,5 @@ export default function HelpPage() {
     </>
   );
 }
+
+

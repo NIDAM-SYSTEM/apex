@@ -9,7 +9,7 @@ const sections = [
     id: "acceptance",
     icon: "scale",
     title: "Acceptation des conditions",
-    colorClass: "text-apex-blue bg-blue-50 border-blue-100",
+    colorClass: "text-apex-blue bg-apex-cream border-apex-border-light",
     content: [
       "En accédant à la plateforme APEX ENS Tétouan et en l'utilisant, vous acceptez d'être lié par les présentes Conditions d'utilisation.",
       "Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser notre plateforme. Ces conditions s'appliquent à tous les visiteurs, utilisateurs et membres de la communauté APEX.",
@@ -93,7 +93,7 @@ export default function TermsPage() {
       {/* Hero */}
       <section className="relative bg-[#050B18] overflow-hidden pt-28 pb-20">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]" />
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-apex-blue/10 rounded-full blur-[120px]" />
           <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/8 rounded-full blur-[100px]" />
         </div>
         <div
@@ -130,7 +130,7 @@ export default function TermsPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="flex-shrink-0 font-body text-[12px] font-medium text-slate-500 hover:text-apex-blue transition-colors duration-150 px-3 py-1.5 rounded-lg hover:bg-blue-50 whitespace-nowrap"
+                className="flex-shrink-0 font-body text-[12px] font-medium text-slate-500 hover:text-apex-blue transition-colors duration-150 px-3 py-1.5 rounded-lg hover:bg-apex-cream whitespace-nowrap"
               >
                 {s.title}
               </a>
@@ -171,7 +171,7 @@ export default function TermsPage() {
               ))}
 
               {/* Contact CTA */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-7">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-apex-border-light rounded-2xl p-7">
                 <div className="flex items-center gap-3 mb-3">
                   <Mail className="w-5 h-5 text-apex-blue" />
                   <h2 className="font-heading font-bold text-[17px] text-apex-dark">Des questions ?</h2>

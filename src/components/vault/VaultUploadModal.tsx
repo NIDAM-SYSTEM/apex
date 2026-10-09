@@ -127,9 +127,9 @@ export default function VaultUploadModal({
 
           <div className="flex min-w-0 items-start gap-3.5">
 
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-apex-cream">
               <Upload
-                className="h-4.5 w-4.5 text-[#2563eb]"
+                className="h-4.5 w-4.5 text-[#8B1A4A]"
                 strokeWidth={2}
               />
             </div>
@@ -195,7 +195,7 @@ export default function VaultUploadModal({
               <button
                 type="button"
                 onClick={handleClose}
-                className="mt-7 inline-flex items-center justify-center rounded-xl bg-[#0f2560] px-6 py-3 text-xs font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#163274] hover:shadow-md"
+                className="mt-7 inline-flex items-center justify-center rounded-xl bg-[#3D0821] px-6 py-3 text-xs font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#5C1232] hover:shadow-md"
               >
                 Fermer
               </button>
@@ -240,9 +240,9 @@ export default function VaultUploadModal({
                         onClick={() => setDocType(type.id)}
                         className={[
                           "flex min-h-[72px] flex-col items-center justify-center gap-2 rounded-xl border transition-all",
-                          "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300",
+                          "focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-300",
                           selected
-                            ? "border-[#2563eb] bg-blue-50 text-[#2563eb] shadow-sm"
+                            ? "border-[#8B1A4A] bg-apex-cream text-[#8B1A4A] shadow-sm"
                             : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50",
                         ].join(" ")}
                         aria-pressed={selected}
@@ -300,7 +300,7 @@ export default function VaultUploadModal({
                         }
                         placeholder="Ex. Analyse 1"
                         required
-                        className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                        className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-rose-300 focus:bg-white focus:ring-4 focus:ring-blue-50"
                       />
                     </div>
                   </div>
@@ -324,7 +324,7 @@ export default function VaultUploadModal({
                         onChange={(event) =>
                           setYear(event.target.value)
                         }
-                        className="h-10 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs text-slate-800 outline-none transition-all focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                        className="h-10 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs text-slate-800 outline-none transition-all focus:border-rose-300 focus:bg-white focus:ring-4 focus:ring-blue-50"
                       >
                         <option value="2024">
                           2023 / 2024
@@ -371,8 +371,8 @@ export default function VaultUploadModal({
                     "flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-5 py-8 text-center",
                     "transition-all duration-200",
                     fileName
-                      ? "border-blue-200 bg-blue-50/40"
-                      : "border-slate-200 bg-slate-50/50 hover:border-blue-300 hover:bg-blue-50/30",
+                      ? "border-apex-border bg-apex-cream/40"
+                      : "border-slate-200 bg-slate-50/50 hover:border-rose-300 hover:bg-apex-cream/30",
                   ].join(" ")}
                 >
 
@@ -380,7 +380,7 @@ export default function VaultUploadModal({
                     className={[
                       "flex h-11 w-11 items-center justify-center rounded-xl",
                       fileName
-                        ? "bg-blue-100 text-[#2563eb]"
+                        ? "bg-rose-100 text-[#8B1A4A]"
                         : "bg-white text-slate-400 border border-slate-200",
                     ].join(" ")}
                   >
@@ -404,7 +404,7 @@ export default function VaultUploadModal({
                         {fileName}
                       </p>
 
-                      <p className="mt-1 text-[10px] text-[#2563eb]">
+                      <p className="mt-1 text-[10px] text-[#8B1A4A]">
                         Cliquer pour remplacer le fichier
                       </p>
                     </>
@@ -469,7 +469,7 @@ export default function VaultUploadModal({
                       setStudentName(event.target.value)
                     }
                     placeholder="Ex. Yassine B."
-                    className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
+                    className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-rose-300 focus:ring-4 focus:ring-blue-50"
                   />
 
                 </div>
@@ -503,7 +503,7 @@ export default function VaultUploadModal({
                       "inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all",
                       !fileName || !moduleTitle.trim()
                         ? "cursor-not-allowed bg-slate-300"
-                        : "bg-[#0f2560] hover:-translate-y-0.5 hover:bg-[#163274] hover:shadow-md",
+                        : "bg-[#3D0821] hover:-translate-y-0.5 hover:bg-[#5C1232] hover:shadow-md",
                     ].join(" ")}
                   >
                     <Upload
@@ -524,3 +524,5 @@ export default function VaultUploadModal({
     </div>
   );
 }
+
+

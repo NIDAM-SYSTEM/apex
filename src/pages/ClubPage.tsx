@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const stats = [
-  { value: '250+',  label: 'Ressources Partagées', icon: <BookOpen  className="w-6 h-6 mx-auto mb-3 text-blue-400" /> },
+  { value: '250+',  label: 'Ressources Partagées', icon: <BookOpen  className="w-6 h-6 mx-auto mb-3 text-rose-400" /> },
   { value: '1.2K+', label: 'Étudiants Aidés',      icon: <Users     className="w-6 h-6 mx-auto mb-3 text-amber-400" /> },
   { value: '45+',   label: 'Membres Actifs',       icon: <Zap       className="w-6 h-6 mx-auto mb-3 text-emerald-400" /> },
 ];
@@ -27,11 +27,11 @@ const events = [
   },
   {
     id: 'ev2',
-    dotColor: 'bg-apex-blue border-blue-200',
+    dotColor: 'bg-apex-blue border-apex-border',
     date: '25 Septembre',
     title: 'Hackathon / Code Session',
     tag: 'Tech',
-    tagColor: 'bg-blue-50 text-apex-blue border-blue-200',
+    tagColor: 'bg-apex-cream text-apex-blue border-apex-border',
     desc: '48h pour concevoir des outils numériques au service des étudiants ENS.',
   },
   {
@@ -45,27 +45,68 @@ const events = [
   },
 ];
 
-// Premium gradient avatars
-const avatarColors = [
-  'bg-gradient-to-br from-blue-500 to-blue-700',
-  'bg-gradient-to-br from-amber-400 to-orange-500',
-  'bg-gradient-to-br from-emerald-400 to-teal-600',
-  'bg-gradient-to-br from-violet-500 to-purple-700',
-  'bg-gradient-to-br from-rose-400 to-pink-600',
-  'bg-gradient-to-br from-sky-400 to-blue-600',
-  'bg-gradient-to-br from-orange-400 to-red-500',
-  'bg-gradient-to-br from-teal-400 to-emerald-600',
+interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  objectPosition?: string;
+  isPlaceholder?: boolean;
+}
+
+// Première ligne : Bureau exécutif avec leurs photos officielles
+const executiveMembers: TeamMember[] = [
+  {
+    name: 'Yahia Qessaoui',
+    role: 'President',
+    image: '/team/yahia-qessaoui.jpg',
+    objectPosition: 'center 15%',
+  },
+  {
+    name: 'Khalid Ouisnaf',
+    role: 'Vice President',
+    image: '/team/khalid-ouisnaf.jpg',
+    objectPosition: 'center 12%',
+  },
+  {
+    name: 'Ihsane Ouahlim',
+    role: 'Secretary',
+    image: '/team/ihsane-ouahlim.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    name: 'Khadija Bahaj',
+    role: 'Treasurer',
+    image: '/team/khadija-bahaj.jpg',
+    objectPosition: 'center 20%',
+  },
 ];
 
-const contributors = [
-  { name: 'Yassine Moussaid',  role: 'Développement',  initials: 'YM' },
-  { name: 'Salma Benali',      role: 'Design UI/UX',   initials: 'SB' },
-  { name: 'Amine Kettani',     role: 'Logistique',     initials: 'AK' },
-  { name: 'Hiba Chakir',       role: 'Communication',  initials: 'HC' },
-  { name: 'Omar Znati',        role: 'Développement',  initials: 'OZ' },
-  { name: 'Nadia Fathi',       role: 'Recherche',      initials: 'NF' },
-  { name: 'Rachid Alami',      role: 'Coordination',   initials: 'RA' },
-  { name: 'Fatima Ezzahra',    role: 'Relations',      initials: 'FE' },
+// Deuxième ligne : Coordinateurs des pôles avec leurs photos officielles
+const coordinatorMembers: TeamMember[] = [
+  {
+    name: 'Khalid Acharki',
+    role: 'Media Coordinator',
+    image: '/team/khalid-acharki.jpg',
+    objectPosition: 'center 18%',
+  },
+  {
+    name: 'Anas Elhamioui',
+    role: 'Communication Coordinator',
+    image: '/team/anas-elhamioui.jpg',
+    objectPosition: 'center 18%',
+  },
+  {
+    name: 'Abderrahman Marssou',
+    role: 'Content Development Coordinator',
+    image: '/team/abderrahman-marssou.jpg',
+    objectPosition: '55% 22%',
+  },
+  {
+    name: 'Mohamed Reda Belbida',
+    role: 'Organizing Coordinator',
+    image: '/team/mohamed-reda-belbida.jpg',
+    objectPosition: '68% 26%',
+  },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -80,11 +121,11 @@ export default function ClubPage() {
             SECTION 1 — Impact Dashboard Hero (Deep Vibe)
         ══════════════════════════════════════════════════════════════ */}
         <section
-          className="bg-[#0a1128] pt-24 pb-44 px-4 sm:px-6 relative overflow-hidden"
+          className="bg-[#1A0510] pt-24 pb-44 px-4 sm:px-6 relative overflow-hidden"
           aria-labelledby="club-hero-heading"
         >
           {/* Background effects */}
-          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
+          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-apex-blue/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
           <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
 
           <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -101,7 +142,7 @@ export default function ClubPage() {
               className="font-heading font-black text-white text-4xl sm:text-5xl lg:text-7xl leading-[1.05] tracking-tight mb-6"
             >
               Construire l'avenir<br className="hidden sm:block" /> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">de l'ENS Tétouan.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-rose-200">de l'ENS Tétouan.</span>
             </h1>
 
             {/* Subtext */}
@@ -166,8 +207,8 @@ export default function ClubPage() {
                 {/* Right — Actionable Pillars */}
                 <div className="flex flex-col justify-center gap-4">
                   {manifesto.map((item, i) => (
-                    <div key={i} className="group flex items-center gap-5 bg-slate-50 border border-slate-100 p-4 rounded-2xl hover:border-blue-200 hover:bg-blue-50/50 transition-colors duration-200">
-                      <div className="w-12 h-12 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-apex-blue flex-shrink-0 group-hover:scale-110 group-hover:border-blue-200 transition-all duration-300 shadow-sm">
+                    <div key={i} className="group flex items-center gap-5 bg-slate-50 border border-slate-100 p-4 rounded-2xl hover:border-apex-border hover:bg-apex-cream/50 transition-colors duration-200">
+                      <div className="w-12 h-12 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-apex-blue flex-shrink-0 group-hover:scale-110 group-hover:border-apex-border transition-all duration-300 shadow-sm">
                         {item.icon}
                       </div>
                       <p className="font-body text-[14px] font-bold text-slate-800 leading-snug group-hover:text-apex-blue transition-colors">
@@ -200,7 +241,7 @@ export default function ClubPage() {
             {/* Timeline */}
             <div className="relative">
               {/* Glowing Vertical line */}
-              <div className="absolute left-[23px] top-4 bottom-4 w-1 bg-gradient-to-b from-blue-500 via-amber-400 to-transparent rounded-full opacity-30" aria-hidden="true" />
+              <div className="absolute left-[23px] top-4 bottom-4 w-1 bg-gradient-to-b from-rose-700 via-amber-400 to-transparent rounded-full opacity-30" aria-hidden="true" />
 
               <ol className="space-y-8" aria-label="Événements du club">
                 {events.map((ev) => (
@@ -212,7 +253,7 @@ export default function ClubPage() {
                     </div>
 
                     {/* Event Card */}
-                    <div className="flex-1 min-w-0 bg-white border border-slate-200 rounded-2xl p-6 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group">
+                    <div className="flex-1 min-w-0 bg-white border border-slate-200 rounded-2xl p-6 hover:border-rose-300 hover:shadow-xl transition-all duration-300 group">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3 flex-wrap">
                           <h3 className="font-heading font-black text-slate-900 text-[17px] group-hover:text-apex-blue transition-colors">
@@ -252,36 +293,84 @@ export default function ClubPage() {
               </p>
             </div>
 
-            {/* Contributors Grid */}
-            <div
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"
-              role="list"
-              aria-label="Membres de l'équipe APEX"
-            >
-              {contributors.map((person, i) => (
-                <div
-                  key={person.name}
-                  role="listitem"
-                  className="group flex flex-col items-center text-center p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-[0_10px_40px_rgb(37,99,235,0.08)] transition-all duration-300 cursor-default hover:-translate-y-1"
-                >
-                  {/* Premium Gradient Avatar */}
+            {/* Première ligne : Bureau exécutif */}
+            <div className="mb-10">
+              <div className="flex items-center gap-2 mb-5 justify-center sm:justify-start">
+                <span className="h-2 w-2 rounded-full bg-[#8B1A4A]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Bureau Exécutif
+                </h3>
+              </div>
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                role="list"
+                aria-label="Bureau exécutif APEX"
+              >
+                {executiveMembers.map((person) => (
                   <div
-                    className={`w-16 h-16 rounded-2xl ${avatarColors[i % avatarColors.length]} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300`}
-                    aria-hidden="true"
+                    key={person.name}
+                    role="listitem"
+                    className="group flex flex-col items-center text-center p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-apex-border hover:shadow-[0_10px_40px_rgba(139,26,74,0.08)] transition-all duration-300 cursor-default hover:-translate-y-1"
                   >
-                    <span className="font-heading font-black text-white text-xl tracking-tight">
-                      {person.initials}
+                    <div className="relative mb-4 h-28 w-28 overflow-hidden rounded-2xl border-2 border-white shadow-md ring-2 ring-slate-100 group-hover:ring-[#8B1A4A]/25 group-hover:scale-105 transition-all duration-300 bg-slate-100 flex items-center justify-center">
+                      <img
+                        src={person.image}
+                        alt={person.name}
+                        className="h-full w-full object-cover transition-transform duration-300"
+                        style={person.objectPosition ? { objectPosition: person.objectPosition } : undefined}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <p className="font-heading font-black text-slate-900 text-[15px] leading-tight mb-1.5 group-hover:text-apex-blue transition-colors">
+                      {person.name}
+                    </p>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-apex-cream text-[#8B1A4A] border border-apex-border/60 font-body text-[11px] font-bold tracking-wide">
+                      {person.role}
                     </span>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  <p className="font-body font-black text-slate-900 text-[14px] leading-tight mb-1.5 group-hover:text-apex-blue transition-colors">
-                    {person.name}
-                  </p>
-                  <span className="font-body text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                    {person.role}
-                  </span>
-                </div>
-              ))}
+            {/* Deuxième ligne : Coordinateurs des pôles */}
+            <div>
+              <div className="flex items-center gap-2 mb-5 justify-center sm:justify-start">
+                <span className="h-2 w-2 rounded-full bg-amber-500" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Coordination des Pôles
+                </h3>
+              </div>
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                role="list"
+                aria-label="Coordinateurs des pôles APEX"
+              >
+                {coordinatorMembers.map((person) => (
+                  <div
+                    key={person.name}
+                    role="listitem"
+                    className="group flex flex-col items-center text-center p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-apex-border hover:shadow-[0_10px_40px_rgba(139,26,74,0.08)] transition-all duration-300 cursor-default hover:-translate-y-1"
+                  >
+                    <div className="relative mb-4 h-28 w-28 overflow-hidden rounded-2xl border-2 border-white shadow-md ring-2 ring-slate-100 group-hover:ring-[#8B1A4A]/25 group-hover:scale-105 transition-all duration-300 bg-slate-100 flex items-center justify-center">
+                      <img
+                        src={person.image}
+                        alt={person.name}
+                        className="h-full w-full object-cover transition-transform duration-300"
+                        style={person.objectPosition ? { objectPosition: person.objectPosition } : undefined}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <p className="font-heading font-black text-slate-900 text-[15px] leading-tight mb-1.5 group-hover:text-apex-blue transition-colors">
+                      {person.name}
+                    </p>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/80 font-body text-[11px] font-bold tracking-wide group-hover:bg-apex-cream group-hover:text-[#8B1A4A] group-hover:border-apex-border/60 transition-colors">
+                      {person.role}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -291,11 +380,11 @@ export default function ClubPage() {
         ══════════════════════════════════════════════════════════════ */}
         <section className="bg-white pb-24 px-4 sm:px-6" aria-labelledby="join-heading">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-[#0a1128] rounded-[2.5rem] p-10 md:p-14 text-center relative overflow-hidden shadow-2xl">
+            <div className="bg-[#1A0510] rounded-[2.5rem] p-10 md:p-14 text-center relative overflow-hidden shadow-2xl">
               
               {/* Background Accents */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px] pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-apex-blue/20 rounded-full blur-[80px] pointer-events-none" />
 
               <div className="w-16 h-16 bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
                 <Trophy className="w-8 h-8 text-amber-400" strokeWidth={2} aria-hidden="true" />
@@ -307,13 +396,13 @@ export default function ClubPage() {
               >
                 Prêt à impacter ton université ?
               </h2>
-              <p className="font-body text-blue-100 text-[15px] leading-relaxed mb-10 max-w-lg mx-auto">
+              <p className="font-body text-rose-100 text-[15px] leading-relaxed mb-10 max-w-lg mx-auto">
                 Rejoins une équipe d'élite qui construit de vrais outils pour de vraies personnes. Quel que soit ton domaine, ta place est ici.
               </p>
 
               <button
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 bg-amber-400 text-[#0a1128]
+                className="group inline-flex items-center justify-center gap-3 bg-amber-400 text-[#1A0510]
                            font-body font-black text-[16px] px-10 py-5 rounded-2xl
                            hover:bg-amber-300 active:scale-[0.98] hover:-translate-y-1
                            transition-all duration-300 shadow-[0_0_30px_rgba(245,158,11,0.3)] hover:shadow-[0_0_50px_rgba(245,158,11,0.5)]
@@ -350,3 +439,5 @@ export default function ClubPage() {
     </>
   );
 }
+
+

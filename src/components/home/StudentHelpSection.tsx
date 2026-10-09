@@ -12,7 +12,7 @@ export default function StudentHelpSection() {
       aria-labelledby="help-showcase-heading"
     >
       {/* Subtle background decoration */}
-      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-3xl opacity-50 pointer-events-none" />
+      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-apex-cream/50 rounded-full blur-3xl opacity-50 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -24,7 +24,7 @@ export default function StudentHelpSection() {
           <div className="lg:col-span-5 order-1 flex flex-col">
             
             {/* Eyebrow / Badge */}
-            <div className="inline-flex self-start items-center gap-2 bg-blue-50/80 border border-blue-100/80 text-apex-blue font-body text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+            <div className="inline-flex self-start items-center gap-2 bg-apex-cream/80 border border-apex-border-light/80 text-apex-blue font-body text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
               <Lightbulb className="w-3.5 h-3.5" strokeWidth={2.5} aria-hidden="true" />
               Le Hub Central
             </div>
@@ -35,7 +35,7 @@ export default function StudentHelpSection() {
               className="font-heading font-bold text-slate-900 text-3xl sm:text-4xl lg:text-[2.5rem] leading-[1.15] tracking-tight mb-5"
             >
               Toutes les procédures. <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-apex-blue to-blue-500">Un seul endroit.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-apex-blue to-rose-700">Un seul endroit.</span>
             </h2>
 
             {/* Subtext (The Purpose) */}
@@ -46,7 +46,7 @@ export default function StudentHelpSection() {
             {/* The Scope (3 Pillars showing it's a Hub) */}
             <div className="space-y-5 mb-10">
               <div className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-apex-blue group-hover:border-blue-200 transition-colors flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-apex-cream group-hover:text-apex-blue group-hover:border-apex-border transition-colors flex-shrink-0">
                   <CheckCircle2 className="w-5 h-5" strokeWidth={2} />
                 </div>
                 <div>
@@ -56,7 +56,7 @@ export default function StudentHelpSection() {
               </div>
 
               <div className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-apex-blue group-hover:border-blue-200 transition-colors flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-apex-cream group-hover:text-apex-blue group-hover:border-apex-border transition-colors flex-shrink-0">
                   <FileText className="w-5 h-5" strokeWidth={2} />
                 </div>
                 <div>
@@ -66,7 +66,7 @@ export default function StudentHelpSection() {
               </div>
 
               <div className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-apex-blue group-hover:border-blue-200 transition-colors flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-apex-cream group-hover:text-apex-blue group-hover:border-apex-border transition-colors flex-shrink-0">
                   <MapPin className="w-5 h-5" strokeWidth={2} />
                 </div>
                 <div>
@@ -82,7 +82,7 @@ export default function StudentHelpSection() {
                 to="/help"
                 className="group inline-flex items-center gap-2.5 bg-apex-blue text-white
                            font-body font-bold text-[15px] px-8 py-4 rounded-xl
-                           hover:bg-[#1d4ed8] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgb(37,99,235,0.25)] 
+                           hover:bg-[#6D1239] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgb(37,99,235,0.25)] 
                            transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-apex-blue"
               >
                 Explorer le Hub d'Aide
@@ -138,12 +138,12 @@ export default function StudentHelpSection() {
               </div>
 
               {/* The Instant Answer Block (The Procedure Proof) */}
-              <div className="bg-white p-6 rounded-2xl border border-blue-100 mt-4 shadow-lg shadow-blue-50/50 relative">
+              <div className="bg-white p-6 rounded-2xl border border-apex-border-light mt-4 shadow-lg shadow-blue-50/50 relative">
                 
                 {/* Result header */}
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-body text-[10px] font-bold uppercase tracking-wider text-apex-blue bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">
+                    <span className="font-body text-[10px] font-bold uppercase tracking-wider text-apex-blue bg-apex-cream border border-apex-border-light px-2.5 py-1 rounded-full">
                       Guide Officiel
                     </span>
                   </div>
@@ -160,8 +160,8 @@ export default function StudentHelpSection() {
                 {/* Checklist (The Procedure) */}
                 <div className="space-y-3 my-5">
                   {/* Step 1 */}
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-blue-200 transition-colors">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-apex-border transition-colors">
+                    <div className="w-6 h-6 rounded-full bg-rose-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
                       1
                     </div>
                     <div className="text-left flex-1">
@@ -175,8 +175,8 @@ export default function StudentHelpSection() {
                   </div>
 
                   {/* Step 2 */}
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-blue-200 transition-colors">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-apex-border transition-colors">
+                    <div className="w-6 h-6 rounded-full bg-rose-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
                       2
                     </div>
                     <div className="text-left flex-1">
@@ -190,8 +190,8 @@ export default function StudentHelpSection() {
                   </div>
 
                   {/* Step 3 */}
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-blue-200 transition-colors">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-apex-border transition-colors">
+                    <div className="w-6 h-6 rounded-full bg-rose-100 text-apex-blue font-bold text-[12px] flex items-center justify-center flex-shrink-0 mt-0.5">
                       3
                     </div>
                     <div className="text-left flex-1">
@@ -211,7 +211,7 @@ export default function StudentHelpSection() {
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
                     Temps estimé : <strong className="text-slate-700">2 jours</strong>
                   </span>
-                  <button className="text-white bg-apex-blue font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                  <button className="text-white bg-apex-blue font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-apex-blue-hover transition-colors shadow-sm">
                     <Download className="w-3.5 h-3.5" />
                     Formulaire.pdf
                   </button>
@@ -244,3 +244,5 @@ export default function StudentHelpSection() {
     </section>
   );
 }
+
+

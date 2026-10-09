@@ -1,4 +1,5 @@
-import { Clock, MapPin, Users, CalendarDays, Image, ArrowRight, Ticket, Sparkles, Flame } from 'lucide-react';
+import { useState } from 'react';
+import { Clock, MapPin, Users, CalendarDays, ArrowRight, Ticket, Flame, X, Maximize2 } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
@@ -13,7 +14,7 @@ const upcomingEvents = [
     location: 'Amphi 4',
     audience: 'Ouvert à tous',
     tag: 'Méthodologie',
-    tagColor: 'bg-blue-50 text-apex-blue border-blue-100',
+    tagColor: 'bg-apex-cream text-apex-blue border-apex-border-light',
     spots: 'Inscriptions ouvertes',
   },
   {
@@ -55,29 +56,37 @@ const upcomingEvents = [
 const pastEvents = [
   {
     id: 'pe1',
-    title: 'Journée d\'Intégration 2025',
-    date: '15 Septembre 2025',
-    category: 'Campus',
-    attendees: '120 participants',
+    title: "Women's Day",
+    date: '8 Mars 2025',
+    category: 'Célébration',
+    attendees: 'Communauté ENS',
+    image: '/events/womens-day.jpg',
+    objectPosition: 'center 46%',
   },
   {
     id: 'pe2',
-    title: 'Hackathon ENS Tétouan 2024',
-    date: '3 – 4 Décembre 2024',
-    category: 'Tech & Code',
-    attendees: '48 participants',
+    title: 'Voyage à Chefchaouen',
+    date: 'Sortie APEX 2025',
+    category: 'Excursion',
+    attendees: 'Membres & Étudiants',
+    image: '/events/chefchaouen-trip.jpg',
+    objectPosition: 'center 30%',
   },
   {
     id: 'pe3',
-    title: 'Tournoi d\'Échecs S1 — 2025',
-    date: '20 Février 2025',
-    category: 'Loisir',
-    attendees: '32 participants',
+    title: 'Action Sociale & Caritative',
+    date: 'Édition Solidaire',
+    category: 'Solidarité',
+    attendees: 'Membres & Invités',
+    image: '/events/social-charity.jpg',
+    objectPosition: 'center 55%',
   },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function EventsPage() {
+  const [selectedEvent, setSelectedEvent] = useState<typeof pastEvents[0] | null>(null);
+
   return (
     <>
       <Header activePage="events" />
@@ -88,11 +97,11 @@ export default function EventsPage() {
             SECTION 1 — The Hype Hero (Deep Vibe)
         ══════════════════════════════════════════════════════════════ */}
         <section
-          className="bg-[#0a1128] pt-24 pb-40 px-4 sm:px-6 text-center relative overflow-hidden"
+          className="bg-[#1A0510] pt-24 pb-40 px-4 sm:px-6 text-center relative overflow-hidden"
           aria-labelledby="events-hero-heading"
         >
           {/* Subtle Stage Lights */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen" aria-hidden="true" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-apex-blue/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen" aria-hidden="true" />
           <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" aria-hidden="true" />
 
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
@@ -108,7 +117,7 @@ export default function EventsPage() {
               className="font-heading font-black text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05] mb-6"
             >
               Le cœur battant <br /> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">du campus.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-rose-200">du campus.</span>
             </h1>
 
             {/* Subtext */}
@@ -173,14 +182,14 @@ export default function EventsPage() {
 
                   <div className="flex flex-col sm:flex-row gap-4 mb-6">
                     <div className="flex items-center gap-2.5 text-slate-600">
-                      <div className="w-8 h-8 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 bg-apex-cream border border-apex-border-light rounded-lg flex items-center justify-center flex-shrink-0">
                         <MapPin className="w-4 h-4 text-apex-blue" />
                       </div>
                       <span className="font-body text-[14px] font-bold">Hall Principal, Bât. B</span>
                     </div>
                     <div className="hidden sm:block w-px bg-slate-200" />
                     <div className="flex items-center gap-2.5 text-slate-600">
-                      <div className="w-8 h-8 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 bg-apex-cream border border-apex-border-light rounded-lg flex items-center justify-center flex-shrink-0">
                         <Users className="w-4 h-4 text-apex-blue" />
                       </div>
                       <span className="font-body text-[14px] font-bold">Toutes filières</span>
@@ -196,7 +205,7 @@ export default function EventsPage() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-8 pt-8 border-t border-slate-100">
                   <button
                     type="button"
-                    className="inline-flex items-center gap-2 bg-slate-900 text-white font-body font-bold text-[14px] px-8 py-4 rounded-xl hover:bg-apex-blue hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-blue-500/30 focus:outline-none focus:ring-4 focus:ring-apex-blue/30"
+                    className="inline-flex items-center gap-2 bg-slate-900 text-white font-body font-bold text-[14px] px-8 py-4 rounded-xl hover:bg-apex-blue hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-rose-700/30 focus:outline-none focus:ring-4 focus:ring-apex-blue/30"
                   >
                     <Ticket className="w-4 h-4" />
                     Réserver ma place
@@ -231,17 +240,17 @@ export default function EventsPage() {
                 <div
                   key={ev.id}
                   role="listitem"
-                  className="group bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 hover:border-blue-300 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
+                  className="group bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 hover:border-rose-300 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
                 >
                   {/* Hover effect accent */}
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-apex-blue opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   {/* Date Block */}
-                  <div className="w-16 h-16 flex-shrink-0 flex flex-col items-center justify-center bg-slate-50 group-hover:bg-blue-50 border border-slate-100 group-hover:border-blue-200 rounded-xl transition-colors duration-300">
+                  <div className="w-16 h-16 flex-shrink-0 flex flex-col items-center justify-center bg-slate-50 group-hover:bg-apex-cream border border-slate-100 group-hover:border-apex-border rounded-xl transition-colors duration-300">
                     <p className="font-heading font-black text-slate-900 group-hover:text-apex-blue text-xl leading-none">
                       {ev.day}
                     </p>
-                    <p className="font-body text-[10px] font-bold text-slate-400 group-hover:text-blue-500 uppercase tracking-widest mt-1">
+                    <p className="font-body text-[10px] font-bold text-slate-400 group-hover:text-rose-700 uppercase tracking-widest mt-1">
                       {ev.month}
                     </p>
                   </div>
@@ -305,33 +314,50 @@ export default function EventsPage() {
               {pastEvents.map((ev) => (
                 <article
                   key={ev.id}
-                  className="group relative bg-slate-100 rounded-2xl overflow-hidden cursor-pointer"
+                  onClick={() => setSelectedEvent(ev)}
+                  className="group bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-apex-border transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col cursor-pointer"
                 >
-                  {/* Simulated Image Placeholder (Darker for gallery vibe) */}
-                  <div className="aspect-[4/3] bg-slate-200 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90" />
-                    <Image className="w-8 h-8 text-slate-400 z-0 group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />
-                    
-                    {/* Content Layer over Image */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 z-20 transform transition-transform duration-300 group-hover:-translate-y-2">
-                      <span className="inline-block bg-white/20 backdrop-blur-md text-white font-body text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md mb-2">
+                  {/* Photo container - 100% clean and unobstructed */}
+                  <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+                    <img
+                      src={ev.image}
+                      alt={ev.title}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      style={ev.objectPosition ? { objectPosition: ev.objectPosition } : undefined}
+                      loading="lazy"
+                    />
+
+                    {/* Category pill */}
+                    <div className="absolute top-3.5 left-3.5 z-10">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-slate-800 border border-slate-200/60 font-body text-[10px] font-black uppercase tracking-wider shadow-sm">
                         {ev.category}
                       </span>
-                      <h3 className="font-heading font-bold text-white text-[16px] leading-snug mb-1">
+                    </div>
+
+                    {/* Zoom indicator on hover */}
+                    <div className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+
+                  {/* Information below photo */}
+                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between bg-white">
+                    <div>
+                      <h3 className="font-heading font-black text-slate-900 text-[17px] leading-snug group-hover:text-apex-blue transition-colors">
                         {ev.title}
                       </h3>
-                      <p className="font-body text-[12px] text-white/70 font-medium">
-                        {ev.date} · {ev.attendees}
+                      <p className="font-body text-[13px] text-slate-500 font-medium mt-1.5 flex items-center gap-1.5">
+                        <CalendarDays className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                        {ev.date}
                       </p>
                     </div>
 
-                    {/* Hover Action Overlay */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center">
-                      <div className="w-12 h-12 bg-apex-blue rounded-full flex items-center justify-center mb-2 shadow-lg">
-                        <Sparkles className="w-5 h-5 text-white" />
-                      </div>
-                      <span className="font-body text-[12px] font-bold text-white uppercase tracking-wider">
-                        Voir la galerie
+                    <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="font-body text-slate-500 font-medium truncate max-w-[65%]">
+                        {ev.attendees}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-apex-blue font-bold text-[12px] group-hover:translate-x-1 transition-transform flex-shrink-0">
+                        Voir photo <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
                   </div>
@@ -350,7 +376,64 @@ export default function EventsPage() {
 
       </main>
 
+      {/* Lightbox Modal */}
+      {selectedEvent && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-sm"
+          onClick={() => setSelectedEvent(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-apex-cream text-[#8B1A4A] border border-apex-border/60 font-body text-[11px] font-bold tracking-wide">
+                  {selectedEvent.category}
+                </span>
+                <h3 className="font-heading font-black text-slate-900 text-lg">
+                  {selectedEvent.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedEvent(null)}
+                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
+                aria-label="Fermer la vue"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Uncropped Full Image */}
+            <div className="flex-1 overflow-auto bg-slate-950 flex items-center justify-center p-3 sm:p-6 min-h-[350px]">
+              <img
+                src={selectedEvent.image}
+                alt={selectedEvent.title}
+                className="max-h-[65vh] w-auto max-w-full object-contain rounded-xl shadow-2xl"
+              />
+            </div>
+
+            {/* Footer metadata */}
+            <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+              <span className="font-bold flex items-center gap-1.5">
+                <CalendarDays className="w-4 h-4 text-slate-400" />
+                {selectedEvent.date}
+              </span>
+              <span className="font-medium text-slate-500">
+                {selectedEvent.attendees}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );
 }
+
+

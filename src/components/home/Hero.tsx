@@ -23,7 +23,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="bg-slate-50 py-16 sm:py-20" aria-labelledby="hero-heading">
+    <section className="bg-apex-cream py-16 sm:py-20" aria-labelledby="hero-heading">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
 
         {/* Centered text block */}
@@ -53,7 +53,7 @@ export default function Hero() {
           {/* Main search input */}
           <div
             id="hero-search"
-            className="flex items-center bg-white border-2 border-slate-200 rounded-xl h-14 px-4 gap-3 focus-within:border-apex-blue focus-within:shadow-[0_0_0_3px_rgba(30,58,138,0.08)] transition-all duration-200 mb-3"
+            className="flex items-center bg-white border-2 border-slate-200 rounded-xl h-14 px-4 gap-3 focus-within:border-apex-blue focus-within:shadow-[0_0_0_3px_rgba(139,26,74,0.08)] transition-all duration-200 mb-3"
           >
             <Search className="w-5 h-5 text-slate-400 flex-shrink-0" strokeWidth={2} aria-hidden="true" />
             <input
@@ -122,7 +122,7 @@ export default function Hero() {
             {/* Submit */}
             <button
               type="submit"
-              className="h-10 px-6 bg-apex-blue text-white font-body font-medium text-sm rounded-lg hover:bg-[#1d4ed8] active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-apex-blue focus:ring-offset-2 flex-shrink-0"
+              className="h-10 px-6 bg-apex-blue text-white font-body font-medium text-sm rounded-lg hover:bg-apex-blue-hover active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-apex-blue focus:ring-offset-2 flex-shrink-0"
             >
               Rechercher
             </button>
@@ -132,3 +132,4 @@ export default function Hero() {
     </section>
   );
 }
+

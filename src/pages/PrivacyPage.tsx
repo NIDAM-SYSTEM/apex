@@ -9,7 +9,7 @@ const sections = [
     id: "collect",
     icon: "database",
     title: "Données collectées",
-    colorClass: "text-apex-blue bg-blue-50 border-blue-100",
+    colorClass: "text-apex-blue bg-apex-cream border-apex-border-light",
     content: [
       "Nous collectons les informations que vous nous fournissez directement, telles que votre nom, adresse e-mail, filière et semestre lors de la création de votre compte.",
       "Nous collectons automatiquement certaines informations lorsque vous utilisez nos services : données de navigation, adresse IP, type de navigateur, pages visitées et durée des sessions.",
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
       <section className="relative bg-[#050B18] overflow-hidden pt-28 pb-20">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-emerald-600/8 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-blue-600/8 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-apex-blue/8 rounded-full blur-[100px]" />
         </div>
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.025]"
